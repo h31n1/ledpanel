@@ -1,32 +1,27 @@
-### Based on example from
-### https://github.com/adafruit/Adafruit_CircuitPython_DotStar/tree/master/examples
-
+from __future__ import division
 import time
-import random
-import board
-import adafruit_ws2801
 
-### Example for a Feather M4 driving 25 12mm leds
-odata = board.D5
-oclock = board.D6
-numleds = 25
-bright = 1.0
-leds = adafruit_ws2801.WS2801(oclock, odata, numleds, brightness=bright, auto_write=False)
+import Adafruit_WS2801
+import Adafruit_GPIO.SPI as SPI
 
-######################### HELPERS ##############################
+PIXEL_COUNT = 160
+PIXEL_CLOCK = 13
+PIXEL_DOUT  = 6
 
-# a random color 0 -> 224
-def random_color():
-    return random.randrange(0, 7) * 32
+pixels = Adafruit_WS2801.WS2801Pixels(PIXEL_COUNT, clk=PIXEL_CLOCK, do=PIXEL_DOUT)
 
-######################### MAIN LOOP ##############################
-n_leds = len(leds)
 while True:
-    #fill each led with a random color
-    for idx in range(n_leds):
-        leds[idx] = (random_color(), random_color(), random_color())
-
-    # show all leds in led string
-    leds.show()
-
-    time.sleep(.25)
+    for i in range(PIXEL_COUNT-3):
+        pixels.clear()
+        pixels.set_pixel_rgb(i, 255, 0, 0) 
+        pixels.set_pixel_rgb(i + 1, 255, 0, 0) 
+        pixels.set_pixel_rgb(i + 2, 0, 255, 0) 
+        pixels.set_pixel_rgb(i + 3, 0, 255, 0)  
+        pixels.show()
+    for i in range(PIXEL_COUNT-1, 3, -1):
+        pixels.clear()
+        pixels.set_pixel_rgb(i , 0, 255, 0) 
+        pixels.set_pixel_rgb(i - 1, 0, 255, 0) 
+        pixels.set_pixel_rgb(i - 2, 255, 0, 0) 
+        pixels.set_pixel_rgb(i - 3, 255, 0, 0) 
+        pixels.show()
